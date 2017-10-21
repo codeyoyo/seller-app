@@ -2,16 +2,16 @@
   <div class="goods-main">
     <div class="goods-wapper">
       <ul class="type-box">
-        <li class="type-item" v-for="item in goods">
+        <li class="type-item" v-for="(item,index) in goods" :class="selected==index?'selected':''" @click="selectedMethod(index)">
             <a v-text="item.name"></a>
         </li>
       </ul>
     </div>
-    <div class="goods-list">
-      <div class="goods-item" v-for="goodItem in goods">
+    <div class="goods-list" id='goods'>
+      <div class="goods-item" v-for="(goodItem,idx) in goods" :id='"goodItem"+idx'>
         <h3 class="goods-title" v-text="goodItem.name"></h3>
         <ul class="foods-list">
-          <li v-for="foodItem in goodItem.foods">
+          <li v-for="(foodItem,index) in goodItem.foods">
             <div class="food-img">
               <img v-bind:src="foodItem.icon" />
             </div>
@@ -26,8 +26,12 @@
                 <span class="price">￥{{foodItem.price}}</span>
                 <span class="old-price" v-show="foodItem.oldPrice">￥{{foodItem.oldPrice}}</span>
               </div>
+              <div class="change-goods-number">
+                <a class="link-change cut" v-show="getFoodNum(idx+'-'+index)>0" @click="cutFoods(idx+'-'+index)"></a>
+                <span class="num-span" v-show="getFoodNum(idx+'-'+index)>0" v-text="getFoodNum(idx+'-'+index)"></span>
+                <a class="link-change add" @click="addFoods(idx+'-'+index)"></a>
+              </div>
             </div>
-            <div class="line-box"></div>
           </li>
         </ul>
       </div>
@@ -39,8 +43,42 @@
   export default {
     data() {
       return {
-        goods: {}
+        goods: {},
+        selected:0,
+        numGroup:[]
       };
+    },
+    methods: {
+      selectedMethod(idx){
+        this.selected=idx;
+        let item = document.getElementById('goodItem'+idx);
+        let goods = document.getElementById('goods');
+        goods.scrollTop=item.offsetTop;
+      },
+      getFoodNum(idx){
+        for(var i=0;i<this.numGroup.length;i++){
+          var item=this.numGroup[i];
+          if(item.id==idx){
+            return item.count;
+          }
+        }
+      },
+      addFoods(idx){
+        for(var i=0;i<this.numGroup.length;i++){
+          var item=this.numGroup[i];
+          if(item.id==idx){
+            return item.count++;
+          }
+        }
+      },
+      cutFoods(idx){
+        for(var i=0;i<this.numGroup.length;i++){
+          var item=this.numGroup[i];
+          if(item.id==idx){
+            return item.count--;
+          }
+        }
+      }
     },
     created() {
       this.$http.get('/api/goods').then(response => {
@@ -48,6 +86,15 @@
         console.log(JSON.stringify(result));
         if (result.error === 0) {
           this.goods = result.data;
+          for(var i=0;i<result.data.length;i++){
+              var group=result.data[i].foods;
+              for(var j=0;j<group.length;j++){
+                  this.numGroup.push({
+                    id: i+'-'+j,
+                    count:0
+                  });
+              }
+          }
         }
       });
     }
@@ -59,7 +106,7 @@
     display: flex;
     overflow: hidden;
     top: 170px;
-    bottom: 50px;
+    bottom: 0px;
     position: absolute;
   }
 
@@ -67,6 +114,7 @@
     flex: 0 0 100px;
     height: 100%;
     overflow-y: scroll;
+    background-color: #f3f5f7;
   }
 
   .type-box{
@@ -77,6 +125,10 @@
     display: block;
     background-color: #f3f5f7;
     padding: 17px 20px;
+  }
+
+  .type-box .selected {
+    background-color: #ffffff;
   }
 
   .type-box .type-item a{
@@ -125,6 +177,57 @@
   .food-context{
     flex: 1;
     margin-left: 10px;
+    position: relative;
+  }
+
+  .food-context .change-goods-number{
+    position: absolute;
+    right: 5px;
+    bottom: -10px;
+  }
+
+  .change-goods-number .num-span{
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    height: 24px;
+    line-height: 24px;
+    vertical-align: text-bottom;
+  }
+
+  .change-goods-number .link-change{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgb(0,160,220);
+    border-radius: 100%;
+    text-align: center;
+    position: relative;
+  }
+
+  .change-goods-number .cut::after{
+    content: "-";
+    font-size: 24px;
+    color: rgb(0,160,220);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+
+  .change-goods-number .add{
+    background-color: rgb(0,160,220);
+  }
+  .change-goods-number .add::after{
+    content: "+";
+    font-size: 24px;
+    color: #fff;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
   }
 
   .food-title{
