@@ -1,5 +1,5 @@
 # seller App
-*vue 2.0 练习项目，点餐App*
+*vue 2.0 练习项目，外卖App*
 ## 技术栈
 > vue2 + vuex + vue-router + webpack + ES6/7
 ## 项目运行
