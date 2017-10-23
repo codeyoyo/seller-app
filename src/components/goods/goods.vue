@@ -56,42 +56,67 @@
         goods.scrollTop=item.offsetTop;
       },
       getFoodNum(idx){
-        for(var i=0;i<this.numGroup.length;i++){
-          var item=this.numGroup[i];
+        for(let i=0;i<this.numGroup.length;i++){
+          let item=this.numGroup[i];
           if(item.id==idx){
             return item.count;
           }
         }
       },
       addFoods(idx){
-        for(var i=0;i<this.numGroup.length;i++){
-          var item=this.numGroup[i];
+        let count=0;
+        for(let i=0;i<this.numGroup.length;i++){
+          let item=this.numGroup[i];
           if(item.id==idx){
-            return item.count++;
+            count = item.count++;
+            this.$store.commit('setProductArray',{
+              id:idx,
+              count:item.count,
+              price:item.price,
+              productName:item.productName,
+            });
+            break;
           }
         }
+        this.$store.commit('mathTotalMoney', this.numGroup);
       },
       cutFoods(idx){
-        for(var i=0;i<this.numGroup.length;i++){
-          var item=this.numGroup[i];
+        let count=0;
+        for(let i=0;i<this.numGroup.length;i++){
+          let item=this.numGroup[i];
           if(item.id==idx){
-            return item.count--;
+            count =  item.count--;
+            this.$store.commit('setProductArray',{
+              id:idx,
+              count:item.count,
+              price:item.price,
+              productName:item.productName,
+            });
+            break;
           }
         }
+        this.$store.commit('mathTotalMoney', this.numGroup);
       }
     },
     created() {
       this.$http.get('/api/goods').then(response => {
-        var result = response.body;
-        console.log(JSON.stringify(result));
+        let result = response.body;
         if (result.error === 0) {
           this.goods = result.data;
-          for(var i=0;i<result.data.length;i++){
-              var group=result.data[i].foods;
-              for(var j=0;j<group.length;j++){
+          for(let i=0;i<result.data.length;i++){
+              let group=result.data[i].foods;
+              for(let j=0;j<group.length;j++){
+                let id=i+'-'+j,
+                    count=0;
+                var productInfo=this.$store.getters.getProductById(id);
+                if(productInfo){
+                    count=productInfo.count;
+                }
                   this.numGroup.push({
-                    id: i+'-'+j,
-                    count:0
+                    id,
+                    count,
+                    price:group[j]['price'],
+                    productName:group[j]['name']
                   });
               }
           }
@@ -106,7 +131,7 @@
     display: flex;
     overflow: hidden;
     top: 170px;
-    bottom: 0px;
+    bottom: 47px;
     position: absolute;
   }
 

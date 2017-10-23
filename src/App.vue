@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-header v-bind:seller="seller"></v-header>
-    <div class="tab">
+    <v-header v-bind:seller="seller" id='header'></v-header>
+    <div class="tab" id='tab'>
       <div class="tab-item">
         <router-link to="/goods">
           商品
@@ -18,14 +18,18 @@
         </router-link>
       </div>
     </div>
+
     <transition name="slide">
-      <router-view></router-view>
+       <router-view></router-view>
     </transition>
+
+    <v-bottom id='bottom'></v-bottom>
   </div>
 </template>
 
 <script>
   import header from 'components/header/header.vue';
+  import bottom from 'components/bottom/bottom.vue';
   const ERR_OK = 0;
   export default {
     data() {
@@ -34,12 +38,12 @@
       };
     },
     components: {
-      'v-header': header
+      'v-header': header,
+      'v-bottom':bottom
     },
     created() {
       this.$http.get('/api/seller').then(response => {
         var result = response.body;
-        console.log(result);
         if (result.error === ERR_OK) {
           this.seller = result.data;
         }
