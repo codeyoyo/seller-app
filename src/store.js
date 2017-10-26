@@ -2,14 +2,14 @@
 export default (Vuex) => {
     return new Vuex.Store({
         state: {
-            totalMoney: 0,
-            productArray: []
+            totalMoney: 0, //已选购商品总价格
+            productArray: [] //已选购商品数组
         },
         mutations: {
-            setTotalMoney(state, num) {
+            setTotalMoney(state, num) { //设置商品总价格
                 state.totalMoney = num;
             },
-            mathTotalMoney(state) {
+            mathTotalMoney(state) { //计算已选购商品总价格
                 let total = 0;
                 for (let i = 0; i < state.productArray.length; i++) {
                     let item = state.productArray[i];
@@ -17,7 +17,7 @@ export default (Vuex) => {
                 }
                 state.totalMoney = total;
             },
-            setProductArray(state, obj) {
+            setProductArray(state, obj) { //商品放入或拿出购物车
                 let index = -1;
                 for (let i = 0; i < state.productArray.length; i++) {
                     var item = state.productArray[i];
@@ -36,18 +36,18 @@ export default (Vuex) => {
                     state.productArray.push(obj);
                 }
             },
-            clearProduct(state) {
+            clearProduct(state) { //清空购物车
                 state.productArray = [];
             }
         },
         getters: {
-            getTotalMoney(state) {
+            getTotalMoney(state) { //获取商品总价格
                 return state.totalMoney;
             },
-            getProductArray(state) {
+            getProductArray(state) { //获取已选购商品
                 return state.productArray;
             },
-            getProductById: (state, getters) => (id) => {
+            getProductById: (state, getters) => (id) => { //根据ID获取已选商品
                 for (let i = 0; i < state.productArray.length; i++) {
                     var item = state.productArray[i];
                     if (item.id == id) {
