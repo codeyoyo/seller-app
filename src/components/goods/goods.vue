@@ -28,8 +28,10 @@
               </div>
               <div class="change-goods-number">
                 <a class="link-change cut" v-show="getFoodNum(idx+'-'+index)>0" @click="cutFoods(idx+'-'+index)"></a>
+
                 <span class="num-span" v-show="getFoodNum(idx+'-'+index)>0" v-text="getFoodNum(idx+'-'+index)"></span>
-                <a class="link-change add" @click="addFoods(idx+'-'+index)"></a>
+
+                <a class="link-change add" @click="addFoods(idx+'-'+index,foodItem)"></a>
               </div>
             </div>
           </li>
@@ -44,8 +46,7 @@
     data() {
       return {
         goods: {},
-        selected:0,
-        numGroup:[]
+        selected:0
       };
     },
     methods: {
@@ -56,46 +57,34 @@
         goods.scrollTop=item.offsetTop;
       },
       getFoodNum(idx){
-        for(let i=0;i<this.numGroup.length;i++){
-          let item=this.numGroup[i];
-          if(item.id==idx){
-            return item.count;
-          }
+        let product=this.$store.getters.getProductById(idx);
+        if(product){
+          return product.count;
         }
+        return 0;
       },
-      addFoods(idx){
-        let count=0;
-        for(let i=0;i<this.numGroup.length;i++){
-          let item=this.numGroup[i];
-          if(item.id==idx){
-            count = item.count++;
-            this.$store.commit('setProductArray',{
-              id:idx,
-              count:item.count,
-              price:item.price,
-              productName:item.productName,
-            });
-            break;
-          }
+      addFoods(idx,item){
+        let product=this.$store.getters.getProductById(idx);
+        if(product){
+            product.count++;
+            this.$store.commit('setProductArray',product);
+        }else{
+          this.$store.commit('setProductArray',{
+                id:idx,
+                count:1,
+                price:item.price,
+                productName:item.name,
+          });
         }
-        this.$store.commit('mathTotalMoney', this.numGroup);
+        this.$store.commit('mathTotalMoney');
       },
       cutFoods(idx){
-        let count=0;
-        for(let i=0;i<this.numGroup.length;i++){
-          let item=this.numGroup[i];
-          if(item.id==idx){
-            count =  item.count--;
-            this.$store.commit('setProductArray',{
-              id:idx,
-              count:item.count,
-              price:item.price,
-              productName:item.productName,
-            });
-            break;
-          }
+        let product=this.$store.getters.getProductById(idx);
+        if(product){
+            product.count--;
+            this.$store.commit('setProductArray',product);
+            this.$store.commit('mathTotalMoney');
         }
-        this.$store.commit('mathTotalMoney', this.numGroup);
       }
     },
     created() {
@@ -103,23 +92,6 @@
         let result = response.body;
         if (result.error === 0) {
           this.goods = result.data;
-          for(let i=0;i<result.data.length;i++){
-              let group=result.data[i].foods;
-              for(let j=0;j<group.length;j++){
-                let id=i+'-'+j,
-                    count=0;
-                var productInfo=this.$store.getters.getProductById(id);
-                if(productInfo){
-                    count=productInfo.count;
-                }
-                  this.numGroup.push({
-                    id,
-                    count,
-                    price:group[j]['price'],
-                    productName:group[j]['name']
-                  });
-              }
-          }
         }
       });
     }

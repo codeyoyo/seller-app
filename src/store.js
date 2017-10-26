@@ -9,10 +9,10 @@ export default (Vuex) => {
             setTotalMoney(state, num) {
                 state.totalMoney = num;
             },
-            mathTotalMoney(state, array) {
+            mathTotalMoney(state) {
                 let total = 0;
-                for (let i = 0; i < array.length; i++) {
-                    let item = array[i];
+                for (let i = 0; i < state.productArray.length; i++) {
+                    let item = state.productArray[i];
                     total += (item.count * item.price);
                 }
                 state.totalMoney = total;
@@ -35,11 +35,17 @@ export default (Vuex) => {
                 } else {
                     state.productArray.push(obj);
                 }
+            },
+            clearProduct(state) {
+                state.productArray = [];
             }
         },
         getters: {
             getTotalMoney(state) {
                 return state.totalMoney;
+            },
+            getProductArray(state) {
+                return state.productArray;
             },
             getProductById: (state, getters) => (id) => {
                 for (let i = 0; i < state.productArray.length; i++) {
