@@ -1,5 +1,5 @@
 <template>
-  
+  <star :score='4.3' />
 </template>
 
 <script>
