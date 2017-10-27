@@ -16,7 +16,7 @@ export default{
     methods:{
         
     },
-    mounted(){
+    created(){
         let len = parseInt(this.score),
             floor = parseFloat(this.score) - len,
             countStar = 5;
