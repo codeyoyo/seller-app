@@ -35,7 +35,7 @@
         <div class="title" v-text="seller.name">
         </div>
         <div class="level">
-          <span v-for="item in star" :class="item"></span>
+          <star :score='seller.score' />
         </div>
         <div class="detail-mgs-box" v-if="seller.supports">
           <div class="title-box">
@@ -72,6 +72,7 @@
 </template>
 
 <script>
+  import star from '../star/star';
   export default{
     props: {
       seller: {}
@@ -79,25 +80,11 @@
     data() {
       return {
         classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
-        showDetail: false,
-        star: (function (score) {
-          var len = Math.floor(score);
-          var floor = parseFloat(score) - len;
-          var starGroup = [];
-          var countStar = 5;
-          for (var i = 0; i < len; i++) {
-            starGroup.push('on');
-          }
-          if (floor > 0) {
-            starGroup.push('half');
-          }
-          var residue = countStar - starGroup.length;
-          for (var j = 0; j < residue; j++) {
-            starGroup.push('off');
-          }
-          return starGroup;
-        })(this.seller.score)
+        showDetail: false
       };
+    },
+    components:{
+      star
     },
     methods: {
       detailShow(boolen) {
@@ -287,28 +274,7 @@
     text-align: center;
     margin-top: 16px;
   }
-
-  .detail-main .level span {
-    margin-left: 10px;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-  }
-
-  .detail-main .level .on {
-    background-image: url("./star24_on@2x.png");
-  }
-
-  .detail-main .level .half {
-    background-image: url("./star24_half@2x.png");
-  }
-
-  .detail-main .level .off {
-    background-image: url("./star24_off@2x.png");
-  }
-
+  
   .detail .detail-close {
     position: relative;
     font-size: 32px;
