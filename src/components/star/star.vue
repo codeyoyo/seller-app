@@ -4,39 +4,44 @@
     </div>
 </template>
 <script>
+function matchScore(score) {
+  let len = parseInt(score),
+    floor = parseFloat(score) - len,
+    countStar = 5,
+    group = [];
+  for (var i = 0; i < len; i++) {
+    group.push("on");
+  }
+  if (floor > 0) {
+    group.push("half");
+  }
+  let residue = countStar - group.length;
+  if (residue > 0) {
+    for (var j = 0; j < residue; j++) {
+      group.push("off");
+    }
+  }
+  return group;
+}
+
 export default {
   props: {
     score: 0
   },
   data() {
     return {
-        starGroup:[]
+      starGroup: []
     };
   },
-  methods: {
-  },
-  watch:{
-    score:function(newScore){
-        let len = parseInt(newScore),
-        floor = parseFloat(newScore) - len,
-        countStar = 5,
-        group = [];
-      for (var i = 0; i < len; i++) {
-        this.starGroup.push("on");
-      }
-      if (floor > 0) {
-        this.starGroup.push("half");
-      }
-      let residue = countStar - this.starGroup.length;
-      if (residue > 0) {
-        for (var j = 0; j < residue; j++) {
-          this.starGroup.push("off");
-        }
-      }
-      return this.starGroup;
+  methods: {},
+  watch: {
+    score: function(newScore) {
+      this.starGroup = matchScore(newScore);
     }
   },
-  created() {}
+  created() {
+    this.starGroup = matchScore(this.score);
+  }
 };
 </script>
 <style>
