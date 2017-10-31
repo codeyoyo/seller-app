@@ -7,6 +7,8 @@
 > cd seller  
 > npm install  
 > npm run dev  
+## 效果演示
+[查看demo请戳这里](https://codeyoyo.github.io/seller-app/dist/) （请用chrome手机模式预览）
 ## 部分截图
 ### 商品页
 <img width='300px' src="https://codeyoyo.github.io/seller-app/resource/01.jpg" />
