@@ -42,12 +42,7 @@
       'v-bottom':bottom
     },
     created() {
-      this.$http.get('/api/seller').then(response => {
-        var result = response.body;
-        if (result.error === ERR_OK) {
-          this.seller = result.data;
-        }
-      });
+      this.seller = this.$store.getters.getSellerData;
     }
   };
 </script>

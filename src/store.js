@@ -1,9 +1,12 @@
+import data from "../data.json";
+
 //状态管理
 export default (Vuex) => {
     return new Vuex.Store({
         state: {
             totalMoney: 0, //已选购商品总价格
-            productArray: [] //已选购商品数组
+            productArray: [], //已选购商品数组
+            data
         },
         mutations: {
             setTotalMoney(state, num) { //设置商品总价格
@@ -55,6 +58,27 @@ export default (Vuex) => {
                     }
                 }
                 return false;
+            },
+            getAllData(state) {
+                return state.data;
+            },
+            getGoodsData(state) {
+                if (state.data) {
+                    return state.data.goods;
+                }
+                return {};
+            },
+            getRatingsData(state) {
+                if (state.data) {
+                    return state.data.ratings;
+                }
+                return {};
+            },
+            getSellerData(state) {
+                if (state.data) {
+                    return state.data.seller;
+                }
+                return {};
             }
         }
     });

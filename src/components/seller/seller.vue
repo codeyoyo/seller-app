@@ -2,10 +2,10 @@
   <div class="seller">
     <div class="seller-message seller-info-style">
       <div class="message">
-        <h2>粥品香坊（大运村）</h2>
+        <h2 v-text="seller.name"></h2>
         <star :score="4" /> 
-        <span class="message-span">(661)</span>
-        <span class="message-span">月售690单</span>
+        <span class="message-span">({{seller.ratingCount}})</span>
+        <span class="message-span">月售{{seller.sellCount}}单</span>
       </div>
       <div class="mind">
         <div class="mind-icon">♥</div>
@@ -16,68 +16,40 @@
       <div class="score-box">
         <div class="score-item">
           <span class="data-title">起送价</span>
-          <div class="seller-data">20<span class="small-word">元</span></div>
+          <div class="seller-data">{{seller.minPrice}}<span class="small-word">元</span></div>
         </div>
         <div class="score-item score-border">
-          <span class="data-title">起送价</span>
-          <div class="seller-data">20<span class="small-word">元</span></div>
+          <span class="data-title">商家配送</span>
+          <div class="seller-data">{{seller.deliveryPrice}}<span class="small-word">元</span></div>
         </div>
         <div class="score-item">
-          <span class="data-title">起送价</span>
-          <div class="seller-data">20<span class="small-word">元</span></div>
+          <span class="data-title">平均配送时间</span>
+          <div class="seller-data">{{seller.deliveryTime}}<span class="small-word">分钟</span></div>
         </div>
       </div>
      </div>
 
     <div class="seller-deils seller-info-style">
       <h2>公告与活动</h2>
-      <p>粥品香坊其烹饪粥料的秘方源于中国千年古法，在融和现代制作工艺，由世界烹饪大师屈浩先生领衔研发。坚守纯天然、0添加的良心品质深得消费者青睐，发展至今成为粥类的引领品牌。是2008年奥运会和2013年园博会指定餐饮服务商。</p>
-      <div class="seller-deils-item">
-        <span></span>
-        <span>12313132</span>
-      </div>
-      <div class="seller-deils-item">
-        <span></span>
-        <span>12313132</span>
-      </div>
-      <div class="seller-deils-item">
-        <span></span>
-        <span>12313132</span>
+      <p v-text="seller.bulletin"></p>
+      <div class="seller-deils-item" v-for="(item,index) in seller.supports">
+        <i class="type" :class='"type"+item.type'></i>
+        <span v-text="item.description"></span>
       </div>
     </div>
 
     <div class="live-action seller-info-style">
       <h2>商家实景</h2>
       <div class="live-imgs">
-        <div class="live-action-item">
-          <img src="http://fuss10.elemecdn.com/8/71/c5cf5715740998d5040dda6e66abfjpeg.jpeg?imageView2/1/w/180/h/180" />
-        </div>
-        <div class="live-action-item">
-          <img src="http://fuss10.elemecdn.com/8/71/c5cf5715740998d5040dda6e66abfjpeg.jpeg?imageView2/1/w/180/h/180" />
-        </div>
-        <div class="live-action-item">
-          <img src="http://fuss10.elemecdn.com/8/71/c5cf5715740998d5040dda6e66abfjpeg.jpeg?imageView2/1/w/180/h/180" />
-        </div>
-        <div class="live-action-item">
-          <img src="http://fuss10.elemecdn.com/8/71/c5cf5715740998d5040dda6e66abfjpeg.jpeg?imageView2/1/w/180/h/180" />
-        </div>
-        <div class="live-action-item">
-          <img src="http://fuss10.elemecdn.com/8/71/c5cf5715740998d5040dda6e66abfjpeg.jpeg?imageView2/1/w/180/h/180" />
+        <div class="live-action-item" v-for="(item,index) in seller.pics">
+          <img :src="item" />
         </div>
       </div>
     </div>
 
     <div class="seller-info seller-info-style">
       <h2>商家信息</h2>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
-      <div class="info-item">该商家支持发票,请下单写好发票抬头</div>
+      <div class="info-item" v-for="(item,index) in seller.infos" v-text="item"></div>
     </div>
 
   </div>
@@ -87,13 +59,17 @@
 import star from "../star/star";
 export default {
   data() {
-    return {};
+    return {
+      seller:{}
+    };
   },
   methods: {},
   components: {
     star
   },
-  created() {}
+  created() {
+    this.seller=this.$store.getters.getSellerData;
+  }
 };
 </script>
 
@@ -104,6 +80,7 @@ export default {
   bottom: 47px;
   position: absolute;
   width: 100%;
+  overflow-y: auto;
 }
 
 .seller h2{
@@ -197,6 +174,36 @@ export default {
   font-weight: 200;
   color: rgb(240,20,20);
   line-height: 24px;
+}
+
+.type{
+  background-size: 100% 100%;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: top;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.type0{
+  background-image: url("./decrease_3@2x.png");
+}
+
+.type1{
+  background-image: url("./discount_3@2x.png");
+}
+
+.type2{
+  background-image: url("./special_3@2x.png");
+}
+
+.type3{
+  background-image: url("./invoice_3@2x.png");
+}
+
+.type4{
+  background-image: url("./guarantee_3@2x.png");
 }
 
 .seller-deils-item{

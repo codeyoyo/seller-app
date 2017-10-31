@@ -88,12 +88,7 @@
       }
     },
     created() {
-      this.$http.get('/api/goods').then(response => {
-        let result = response.body;
-        if (result.error === 0) {
-          this.goods = result.data;
-        }
-      });
+      this.goods=this.$store.getters.getGoodsData;
     }
   };
 </script>

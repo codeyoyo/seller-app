@@ -71,18 +71,8 @@
       star
     },
     created(){
-      this.$http.get('/api/ratings').then(response => {
-        let result = response.body;
-        if (result.error === 0) {
-          this.retings = result.data;
-        }
-      });
-      this.$http.get('/api/seller').then(response=>{
-        let result = response.body;
-        if (result.error === 0) {
-          this.seller = result.data;
-        }
-      });
+      this.retings=this.$store.getters.getRatingsData;
+      this.seller=this.$store.getters.getSellerData;
     }
   }
 </script>
