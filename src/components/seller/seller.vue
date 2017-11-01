@@ -117,6 +117,7 @@ export default {
 
 .seller-message {
   display: flex;
+  margin-top: 1px;
 }
 
 .message {

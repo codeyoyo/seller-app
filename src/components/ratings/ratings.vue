@@ -25,9 +25,9 @@
     </div>
     <div class="choose-box">
       <div class="choose-btns">
-        <button class="choose-btn btn-blue">全部<span>57</span></button>
-        <button class="choose-btn btn-sky">满意<span>47</span></button>
-        <button class="choose-btn btn-glay">不满意<span>10</span></button>
+        <button class="choose-btn btn-blue">全部<span v-text="ratingsObj.ratingsAll"></span></button>
+        <button class="choose-btn btn-sky">满意<span v-text="ratingsObj.ratingsYes"></span></button>
+        <button class="choose-btn btn-glay">不满意<span v-text="ratingsObj.ratingsNo"></span></button>
       </div>
       <div class="choose-descript">
         <span class="icon-cancel">&radic;</span> 只看有内容的评价
@@ -40,8 +40,11 @@
             <div class="pic"></div>
           </div>
           <div class="portrait-descript">
-            <p class="nick" v-text="item.username"></p>
-            <div class="star-descript">{{item.deliveryTime}}分钟送达</div>
+            <p class="nickname" v-text="item.username"></p>
+            <div class="portrait-time" v-if="item.deliveryTime!=''">
+              <star :score='item.score==""?0:item.score' />
+              <span style="margin-left:5px;">{{item.deliveryTime}}分钟送达</span>
+            </div>
           </div>
         </div>
         <p class="text" v-text="item.text"></p>
@@ -50,220 +53,235 @@
           <span class="recommend-tab" v-for="(recommend,idx) in item.recommend" v-text="recommend"></span>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-  import star from '../star/star';
-  export default{
-    data(){
-      return{
-        retings:[],
-        seller:{}
+import star from "../star/star";
+export default {
+  data() {
+    return {
+      retings: [],
+      seller: {},
+      ratingsObj: {
+        ratingsYes: 0,
+        ratingsNo: 0,
+        ratingsAll: 0
       }
-    },
-    methods:{
-
-    },
-    components:{
-      star
-    },
-    created(){
-      this.retings=this.$store.getters.getRatingsData;
-      this.seller=this.$store.getters.getSellerData;
+    };
+  },
+  methods: {},
+  components: {
+    star
+  },
+  created() {
+    this.retings = this.$store.getters.getRatingsData;
+    this.seller = this.$store.getters.getSellerData;
+    this.ratingsObj.ratingsAll = this.retings.length;
+    for (let i = 0; i < this.retings.length; i++) {
+      var item = this.retings[i];
+      if (item.rateType == 0) {
+        this.ratingsObj.ratingsYes++;
+      } else {
+        this.ratingsObj.ratingsNo++;
+      }
     }
   }
+};
 </script>
 
 <style>
-  .ratings{
-    margin-top: 1px;
-    background-color: #D4D6D9;
-    overflow-y: auto;
-    top: 170px;
-    bottom: 47px;
-    position: absolute;
-    width: 100%;
-  }
+.ratings {
+  margin-top: 1px;
+  background-color: #d4d6d9;
+  overflow-y: auto;
+  top: 170px;
+  bottom: 47px;
+  position: absolute;
+  width: 100%;
+}
 
-  .grade-box{
-    display: flex;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    background-color: #fff;
-  }
+.grade-box {
+  display: flex;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  background-color: #fff;
+}
 
-  .grade-left{
-    flex: .4;
-    text-align: center;
-    border-right: 1px solid #D4D6D9;
-  }
+.grade-left {
+  flex: 0.4;
+  text-align: center;
+  border-right: 1px solid #d4d6d9;
+}
 
-  .grade-right{
-    flex: .6;
-    text-align: left;
-    padding-left: 24px;
-  }
+.grade-right {
+  flex: 0.6;
+  text-align: left;
+  padding-left: 24px;
+}
 
-  .grade-item{
-    margin-top: 8px;
-  }
+.grade-item {
+  margin-top: 8px;
+}
 
-  .grade-num{
-    font-size: 24px;
-    color: rgb(255,153,0);
-  }
+.grade-num {
+  font-size: 24px;
+  color: rgb(255, 153, 0);
+}
 
-  .grade-font{
-    font-size: 12px;
-    color: rgb(7,17,27);
-    vertical-align: initial;
-  }
+.grade-font {
+  font-size: 12px;
+  color: rgb(7, 17, 27);
+  vertical-align: initial;
+}
 
-  .star-num{
-    font-size: 12px;
-    color: rgb(255,153,0);
-  }
+.star-num {
+  font-size: 12px;
+  color: rgb(255, 153, 0);
+}
 
-  .grade-time{
-    font-size: 12px;
-    color: #D4D6D9;
-  }
+.grade-time {
+  font-size: 12px;
+  color: #d4d6d9;
+}
 
-  .grade-gray{
-    font-size: 10px;
-    color: #D4D6D9;
-  }
+.grade-gray {
+  font-size: 10px;
+  color: #d4d6d9;
+}
 
-  .choose-box{
-    background-color: #fff;
-    margin-top: 20px;
-    padding: 18px;
-  }
+.choose-box {
+  background-color: #fff;
+  margin-top: 20px;
+  padding: 18px;
+}
 
-  .choose-descript{
-    border-top: 1px solid #D4D6D9;
-    margin-top: 18px;
-    padding-top: 18px;
-  }
+.choose-descript {
+  border-top: 1px solid #d4d6d9;
+  margin-top: 18px;
+  padding-top: 18px;
+}
 
-  .choose-btn{
-    border: none;
-    height: 36px;
-    padding: 5px 15px;
-    font-size: 15px;
-  }
+.choose-btn {
+  border: none;
+  height: 36px;
+  padding: 5px 15px;
+  font-size: 15px;
+}
 
-  .choose-btn span{
-    font-size: 8px;
-    margin-left: 5px;
-  }
+.choose-btn span {
+  font-size: 8px;
+  margin-left: 5px;
+}
 
-  .btn-blue{
-    color: #fff;
-    background-color: #00A0DC;
-  }
+.btn-blue {
+  color: #fff;
+  background-color: #00a0dc;
+}
 
-  .btn-sky{
-    color: #515A62;
-    background-color: #CCECF8;
-  }
+.btn-sky {
+  color: #515a62;
+  background-color: #ccecf8;
+}
 
-  .btn-glay{
-    color: #515A62;
-    background-color: #E9EBEC;
-  }
+.btn-glay {
+  color: #515a62;
+  background-color: #e9ebec;
+}
 
-  .choose-descript{
-    color:#B7BBBF;
-  }
+.choose-descript {
+  color: #b7bbbf;
+}
 
-  .choose-descript .icon-cancel{
-    color: #fff;
-    background-color: #B7BBBF;
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    border-radius: 100%;
-  }
+.choose-descript .icon-cancel {
+  color: #fff;
+  background-color: #b7bbbf;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 100%;
+}
 
-  .comment-list{
-    margin-top: 1px;
-    background: #fff;
-    padding:0 18px 20px 18px;
-  }
+.comment-list {
+  margin-top: 1px;
+  background: #fff;
+  padding: 0 18px 20px 18px;
+}
 
-  .comment-item{
-    padding-bottom: 18px;
-    padding-top: 18px;
-    border-bottom: 1px solid #B7BBBF;
-  }
+.comment-item {
+  padding-bottom: 18px;
+  padding-top: 18px;
+  border-bottom: 1px solid #b7bbbf;
+}
 
-  .head-portrait{
-    display: flex;
-  }
+.comment-item .head-portrait {
+  display: flex;
+}
 
-  .portrait-pic{
-    flex: .1;
-  }
+.comment-item .portrait-pic {
+  flex: 0.1;
+  text-align: left;
+}
 
-  .pic{
-    background: url(http://static.galileo.xiaojukeji.com/static/tms/default_header.png) no-repeat;
-    background-size: 100% 100%;
-    border-radius: 100%;
-    height: 28px;
-    width: 28px;
-    margin: 0 auto;
-  }
+.pic {
+  background: url(http://static.galileo.xiaojukeji.com/static/tms/default_header.png)
+    no-repeat;
+  background-size: 100% 100%;
+  border-radius: 100%;
+  height: 28px;
+  width: 28px;
+  margin: 0 auto;
+}
 
-  .portrait-descript{
-    flex: .9;
-    padding-left: 12px;
-  }
+.portrait-descript {
+  flex: 0.9;
+  padding-left: 12px;
+}
 
-  .nick{
-    font-size: 10px;
-    color:rgb(7,17,27);
-  }
+.comment-item .nickname {
+  font-size: 10px;
+  color: rgb(7, 17, 27);
+  text-align: left;
+}
 
-  .star-descript{
-    font-size: 10px;
-    color:rgb(147,153,159);
-    font-weight: 200;
-  }
+.comment-item .portrait-time {
+  font-size: 10px;
+  color: rgb(147, 153, 159);
+  font-weight: 200;
+  text-align: left;
+}
 
-  .text{
-    margin-left: 40px;
-    margin-top: 6px;
-    font-size: 15px;
-    color: rgb(7,17,27);
-  }
+.comment-list .text {
+  margin-left: 40px;
+  margin-top: 6px;
+  font-size: 15px;
+  color: rgb(7, 17, 27);
+}
 
-  .recommend{
-    margin-left: 40px;
-    margin-top: 8px;
-  }
+.comment-list .recommend {
+  margin-left: 40px;
+  margin-top: 8px;
+}
 
-  .recommend .heart{
-    font-size: 25px;
-    color: rgb(247, 7, 7);
-    vertical-align: super;
-  }
+.comment-list .recommend .heart {
+  font-size: 25px;
+  color: rgb(247, 7, 7);
+  vertical-align: super;
+}
 
-  .recommend .recommend-tab{
-    display: inline-block;
-    border: 1px solid rgba(7,17,27,.1);
-    font-size: 9px;
-    padding: 6px;
-    color: rgb(147,153,159);
-    width: 65px;
-    text-align: center;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-  }
+.comment-list .recommend .recommend-tab {
+  display: inline-block;
+  border: 1px solid rgba(7, 17, 27, 0.1);
+  font-size: 9px;
+  padding: 6px;
+  color: rgb(147, 153, 159);
+  width: 65px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>

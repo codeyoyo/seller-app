@@ -30,7 +30,6 @@
 <script>
   import header from 'components/header/header.vue';
   import bottom from 'components/bottom/bottom.vue';
-  const ERR_OK = 0;
   export default {
     data() {
       return {

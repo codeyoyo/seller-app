@@ -6,9 +6,15 @@ export default (Vuex) => {
         state: {
             totalMoney: 0, //已选购商品总价格
             productArray: [], //已选购商品数组
-            data
+            data,
+            food: {},
+            shopCarShow: false
         },
         mutations: {
+            hoverShopCar(state) {
+                let boolen = !state.shopCarShow;
+                state.shopCarShow = boolen;
+            },
             setTotalMoney(state, num) { //设置商品总价格
                 state.totalMoney = num;
             },
@@ -41,9 +47,18 @@ export default (Vuex) => {
             },
             clearProduct(state) { //清空购物车
                 state.productArray = [];
+            },
+            selectedFood(state, f) {
+                state.food = f;
             }
         },
         getters: {
+            getshopCarShow(state) {
+                return state.shopCarShow;
+            },
+            getSelectedFood(state) {
+                return state.food;
+            },
             getTotalMoney(state) { //获取商品总价格
                 return state.totalMoney;
             },

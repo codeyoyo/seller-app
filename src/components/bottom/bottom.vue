@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="details-black" v-if="isShowDeils" @click='hoverShopDeils()'></div>
+        <div class="details-black" v-if="hoverShopDeils()" @click='hoverShopCar()'></div>
         <div v-if="isShowDeils" :class="isShowDeils?'details-box':''">
             <div class="details-title">
                 <div class="shop-title">购物车</div>
@@ -25,7 +25,7 @@
         <div class="bottom">
             <div class="item-1">
                 <div class="shopping-car-box">
-                    <span class="car icon-shopping_cart" :class="isShowDeils?'blue-car':'black-car'"@click="hoverShopDeils()"></span>
+                    <span class="car icon-shopping_cart" :class="isShowDeils?'blue-car':'black-car'"@click="hoverShopCar()"></span>
                 </div>
             </div>
             <div class="item-2">
@@ -50,6 +50,9 @@ export default{
         }
     },
     methods:{
+        hoverShopCar(){
+            this.isShowDeils=this.$store.commit('hoverShopCar');
+        },
         matchSend(){
             let total=this.$store.getters.getTotalMoney;
             if(total>=this.startMoney){
@@ -68,7 +71,8 @@ export default{
             return '￥'+this.$store.getters.getTotalMoney;
         },
         hoverShopDeils(){
-            this.isShowDeils=!this.isShowDeils;
+            this.isShowDeils=this.$store.getters.getshopCarShow;
+            return this.isShowDeils;
         },
         addFoods(idx){
             let count=0;
@@ -323,7 +327,6 @@ export default{
     .detail-item .product-name{
         flex: 0.4;
         text-align: left;
-        line-height: 48px;
     }
 
     .detail-item .product-price{
