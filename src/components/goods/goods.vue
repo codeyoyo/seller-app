@@ -2,12 +2,12 @@
   <div class="goods-main">
     <div class="goods-wapper">
       <ul class="type-box">
-        <li class="type-item" v-for="(item,index) in goods" :class="selected==index?'selected':''" @click="selectedMethod(index)">
+        <li class="type-item" v-for="(item,index) in goodClassList" :class="item.selected?'selected':''" @click="selectedMethod(index)">
             <a v-text="item.name"></a>
         </li>
       </ul>
     </div>
-    <div class="goods-list" id='goods'>
+    <div class="goods-list" id='goods' @scroll="goodsScroll();">
       <div class="goods-item" v-for="(goodItem,idx) in goods" :id='"goodItem"+idx'>
         <h3 class="goods-title" v-text="goodItem.name"></h3>
         <ul class="foods-list">
@@ -46,15 +46,42 @@
     data() {
       return {
         goods: {},
-        selected:0
+        goodDocumentList:[],
+        goodClassList:[],
       };
     },
     methods: {
       selectedMethod(idx){
-        this.selected=idx;
+        this.goodClassList.forEach(item=>{
+          item.selected=false;
+        });
+        this.goodClassList[idx].selected=true;
         let item = document.getElementById('goodItem'+idx);
         let goods = document.getElementById('goods');
         goods.scrollTop=item.offsetTop;
+      },
+      goodsScroll(){
+        this.goodClassList.forEach(item=>{
+          item.selected=false;
+        });
+        let goods = document.getElementById('goods');
+        let scrollTop = goods.scrollTop;
+        let goodLength=this.goodDocumentList.length;
+        let selectedIndex=0;
+        for(let i=0;i<goodLength;i++){
+          let startItem=this.goodDocumentList[i];
+          if(goodLength-1===i && scrollTop>=startItem){
+            selectedIndex=i;
+            break;
+          }else{
+            let endItem=this.goodDocumentList[i+1];
+            if(startItem<=scrollTop && scrollTop <endItem){
+              selectedIndex=i;
+              break;
+            }
+          }
+        }
+        this.goodClassList[selectedIndex].selected=true;
       },
       getFoodNum(idx){
         let product=this.$store.getters.getProductById(idx);
@@ -89,6 +116,21 @@
     },
     created() {
       this.goods=this.$store.getters.getGoodsData;
+      this.goods.forEach((item) => {
+          this.goodClassList.push({
+            name:item.name,
+            selected:false
+          });
+      });      
+      this.goodClassList[0].selected=true;
+    },
+    mounted(){
+      for(let i=0;i<this.goods.length;i++){
+          let item = document.getElementById('goodItem'+i),
+              offsetTop=item.offsetTop;
+          this.goodDocumentList.push(offsetTop);
+      }
+      console.log(this.goodDocumentList);
     }
   };
 </script>
