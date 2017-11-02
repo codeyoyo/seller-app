@@ -1,7 +1,7 @@
 <template>
-  <div class="product">
+  <div class="product" v-if="isShow">
       <div class="product-img">
-          <a class="black" @click="isShow();"></a>
+          <a class="black" @click="close()"></a>
           <img :src="food.image" />
       </div>
       <div class="product-price">
@@ -70,6 +70,9 @@ export default {
       });
       this.$store.commit("mathTotalMoney");
       this.$store.commit("hoverShopCar");
+    },
+    close(){
+      this.isShow=false;
     }
   },
   mounted() {},

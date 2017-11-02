@@ -38,21 +38,17 @@
         </ul>
       </div>
     </div>
-    <product :food='food' :idx="selectedFoodIndex" v-if="foodItemShow" :isShow="disabledFood" :ratings='matchRatings()' />
   </div>
 </template>
 
 <script>
-import product from "../product/index.vue";
+import product from "../product/index.js";
 export default {
   data() {
     return {
       goods: {},
       goodDocumentList: [],
-      goodClassList: [],
-      food: {},
-      foodItemShow: false,
-      selectedFoodIndex: ""
+      goodClassList: []
     };
   },
   components: {
@@ -122,28 +118,20 @@ export default {
       }
     },
     selecedFood(index, foodItem) {
-      this.selectedFoodIndex = index;
-      this.food = foodItem;
-      this.foodItemShow = true;
-    },
-    matchRatings() {
       let ratingsObj = {
         ratingsYes: 0,
         ratingsNo: 0,
-        ratingsAll: this.food.ratings.length
+        ratingsAll: foodItem.ratings.length
       };
-      for (let i = 0; i < this.food.ratings.length; i++) {
-        var item = this.food.ratings[i];
+      for (let i = 0; i < foodItem.ratings.length; i++) {
+        var item = foodItem.ratings[i];
         if (item.rateType == 0) {
           ratingsObj.ratingsYes++;
         } else {
           ratingsObj.ratingsNo++;
         }
       }
-      return ratingsObj;
-    },
-    disabledFood() {
-      this.foodItemShow = false;
+      product(foodItem, true, index, ratingsObj);
     }
   },
   created() {
