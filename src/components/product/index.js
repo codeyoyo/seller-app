@@ -4,7 +4,7 @@ import product from './index.vue';
 let productComponent = Vue.extend(product);
 var p = undefined;
 
-export default (food, isShow, idx, ratings) => {
+export default (food, isShow, idx, ratings, store) => {
     if (p == undefined) {
         var box = document.createElement('div');
         document.body.appendChild(box);
@@ -14,7 +14,8 @@ export default (food, isShow, idx, ratings) => {
                 food,
                 isShow,
                 idx,
-                ratings
+                ratings,
+                store
             }
         });
     } else {
@@ -22,7 +23,8 @@ export default (food, isShow, idx, ratings) => {
             food,
             isShow,
             idx,
-            ratings
+            ratings,
+            store
         };
     }
 }

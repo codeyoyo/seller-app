@@ -131,7 +131,7 @@ export default {
           ratingsObj.ratingsNo++;
         }
       }
-      product(foodItem, true, index, ratingsObj);
+      product(foodItem, true, index, ratingsObj,this.$store);
     }
   },
   created() {

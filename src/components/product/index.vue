@@ -55,21 +55,21 @@
 </template>
 <script>
 export default {
-  props: ["food", "isShow", "idx","ratings"],
+  props: ["food", "isShow", "idx","ratings",'store'],
   data() {
     return {
     };
   },
   methods: {
     addShop() {
-      this.$store.commit("setProductArray", {
+      this.store.commit("setProductArray", {
         id: this.idx,
         count: 1,
         price: this.food.price,
         productName: this.food.name
       });
-      this.$store.commit("mathTotalMoney");
-      this.$store.commit("hoverShopCar");
+      this.store.commit("mathTotalMoney");
+      this.store.commit("hoverShopCar");
     },
     close(){
       this.isShow=false;
