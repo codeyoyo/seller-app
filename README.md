@@ -20,3 +20,4 @@
 <img width='300px' src="https://codeyoyo.github.io/seller-app/resource/06.jpg" />
 
 #### 注：此项目纯属个人瞎搞，只是为了进行对VUE的学习而已。
+#### PS：你的star是我学习的动力
