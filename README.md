@@ -3,7 +3,7 @@
 ## 技术栈
 > vue2 + vuex + vue-router + webpack + ES6/7
 ## 项目运行
-> git clone https://github.com/codeyoyo/seller.git  
+> git clone https://github.com/codeyoyo/seller-app.git  
 > cd seller  
 > npm install  
 > npm run dev  
